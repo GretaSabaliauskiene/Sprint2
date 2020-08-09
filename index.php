@@ -18,34 +18,94 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Projektai <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#">Darbuotojai <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="index.php">Darbuotojai</a>
+        <a class="nav-link" href="projektai.php">Projektai</a>
       </li>
     
     </ul>
   </div>
 </nav>
 
+
 <?php include "connection.php" ?>
 
 
 <?php 
-$sql = "SELECT idprojektai, name, iddarbuotojai, darvuotojai FROM projektai";
+$sql = "SELECT iddarbuotojai, vardas, projektai,actions FROM darbuotojai";
 $result = $conn->query($sql);
-print('<table><th>ID</th><th>Projektai</th><th>Darbuotojai</th>');
+print('<table><th>ID</th><th>Name</th><th>projektai</th><th>actions</th>');
 if ($result->num_rows > 0) {
   // output data of each row
   while($row = $result->fetch_assoc()) {
-    echo "<tr><td>" . $row["idprojektai"]. " " ."</td><td>" . $row["name"]. " " ."  </td><td>"  . $row["darvuotojai"]. "<br>";
+    echo "<tr><td>" . $row["iddarbuotojai"]." " ."</td><td>" .
+    $row["vardas"]. " " ."  </td><td>"  .
+    $row["projektai"]. "  </td><td>". 
+    $row["actions"].
+    '<form  action="update.php" method="">
+    <input class="btn btn-info" type="submit" name="submit" value="UPDATE">
+    </form>' .
+    '
+    <form  action="delete.php" method="">
+    <input class="btn btn-danger" type="submit" name="submit" value="DELETE">
+    </form>' ."<br>";
+  
   }
 } else {
   echo "0 results";
 }
 
 print("</table>");
+
+
+
+
+
+
+    function showAll() {
+    global $conn;
+    $conn = mysqli_connect('localhost', 'root', 'mysql', 'projectsworkers');
+        if (!$conn) {
+          die("Database conn failed");
+        }
+      $sql = "SELECT * FROM darbuotojai";
+      $result = mysqli_query($conn, $sql);
+      if (!$result) {
+          die('Query FAILED' . mysqli_error($conn));
+      }
+      while ($row = mysqli_fetch_assoc($result)) {
+          $id = $row['iddarbuotojai'];
+        echo "<option value='$id'>$id</option>" ;
+        }
+    } 
+
+
+
+    function delete() {
+      if (isset($_POST['submit'])) {
+         global $conn;
+         $id = $_POST['id'];
+      
+         $sql = "DELETE FROM darbuotojai ";
+         $sql .= "WHERE iddarbuotojai = $id ";
+  
+         $result = mysqli_query($conn, $sql);
+         if (!$result) {
+          die('Query FAILED' . mysqli_error($conn));
+         } else {
+          echo "Record deleted";
+          header("Location: index.php");
+         }
+        }
+      }
 ?>
+
+
+
+
+
+
 
 
  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

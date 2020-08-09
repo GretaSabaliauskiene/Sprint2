@@ -1,5 +1,5 @@
 <?php include "connection.php" ?>
-<?php include "darbuotojai.php" ?>    
+<?php include "index.php" ?>    
 <?php delete();?>
 
 <div class="container">
